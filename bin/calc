@@ -1,0 +1,70 @@
+#!/usr/bin/env php
+<?php
+
+use App\Service\Console;
+use App\Service\Calculator;
+
+if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+    echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL;
+}
+
+$opt = getopt('', ['expr:', 'help']);
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$console = new Console();
+
+if (empty($opt['expr'])) {
+    $console->error('Required --expr param is missing');
+    showUsage($console);
+
+    exit(1);
+}
+
+if (isset($opt['help'])) {
+    showUsage($console);
+
+    exit(0);
+}
+
+try {
+    $calculator = new Calculator($opt['expr']);
+    $result = $calculator->calculate();
+
+    $console->out('');
+    $console->success('RESULT: ' . $result);
+    $console->out('');
+} catch (Throwable $e) {
+    $console->error('Error: ' . $e->getMessage());
+    $console->error('Most likely that provided expression has logical mistakes: ' . $opt['expr']);
+    $console->error('Please check your expression and try again');
+    showUsage($console);
+
+    exit(1);
+}
+
+
+function showUsage(Console $console, $message = null)
+{
+    if ($message) {
+        print $message . PHP_EOL;
+    }
+
+    $console->out('');
+    $console->out('USAGE: php bin/calc --expr=EXPR --help');
+    $console->out('  --expr=EXPR    Arithmetic expression');
+    $console->out('  --help         Show this usage and exit');
+    $console->out('');
+    $console->out('Expression may contain numbers, parentheses, mathematical operators and constants E and Pi.');
+    $console->out('Expression string should be enclosed in quotes. Spaces will be ignored.');
+    $console->out('');
+    $console->out('Allowed operators:');
+    $console->out(' * : multiply');
+    $console->out(' / : divide');
+    $console->out(' + : add');
+    $console->out(' - : subtract');
+    $console->out(' ^ : degree');
+    $console->out('');
+    $console->out('Example: php bin/calc --expr "55+4 - (2*Pi + 4/E) + 7 * 8^3"');
+    $console->out('');
+}
