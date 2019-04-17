@@ -1,6 +1,6 @@
 # Calculator
 Demonstrative application containing simple calculator.
-<p align="center"><img src="https://github.com/powerdigital/calc-symfony/tree/master/public/assets/img/calc.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/powerdigital/calc-symfony/master/public/assets/img/calc.png" style="width: 30%;"></p>
 
 Prerequisites
 ---
