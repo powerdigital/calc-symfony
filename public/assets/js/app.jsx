@@ -4,7 +4,7 @@ let React = require('react');
 let ReactDOM = require('react-dom');
 let axios = require('axios');
 
-const MAX_LENGTH = 20;
+const MAX_LENGTH = 30;
 const CALC_URL = '/calculate';
 
 function Display(props) {
@@ -92,7 +92,6 @@ class Form extends React.Component {
         let context = this;
 
         axios.post(CALC_URL, {
-            method: 'POST',
             data: this.state.expression,
         })
             .then(function (response) {
