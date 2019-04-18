@@ -37,6 +37,50 @@ class CalculatorTest extends TestCase
         $this->assertNotNull($result);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function testUseCases()
+    {
+        $calc = new Calculator();
+
+        $calc->setExpr('5*(5+2)');
+        $result = $calc->calculate();
+        $this->assertEquals(35, $result);
+
+        $calc->setExpr('5');
+        $result = $calc->calculate();
+        $this->assertEquals(5, $result);
+
+        $calc->setExpr('(5/5*2)');
+        $result = $calc->calculate();
+        $this->assertEquals(2, $result);
+
+        $calc->setExpr('100/2 + 20*3 + (2 - 1)');
+        $result = $calc->calculate();
+        $this->assertEquals(111, $result);
+
+        $calc->setExpr('Pi');
+        $result = $calc->calculate();
+        $this->assertEquals(3.14159, $result);
+
+        $calc->setExpr('E');
+        $result = $calc->calculate();
+        $this->assertEquals(2.71828, $result);
+
+        $calc->setExpr('Pi/E');
+        $result = $calc->calculate();
+        $this->assertEquals(1.15573, $result);
+
+        $calc->setExpr('222/2 + 2*Pi');
+        $result = $calc->calculate();
+        $this->assertEquals(117.28319, $result);
+
+        $calc->setExpr('222/2 + 111*2');
+        $result = $calc->calculate();
+        $this->assertEquals(333, $result);
+    }
+
     public function testValidation()
     {
         $this->assertTrue(Calculator::isValid(self::VALID_EXPRESSION_STRING));

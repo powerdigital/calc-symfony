@@ -12,7 +12,7 @@ class Calculator
     /**
      * @var string Valid arithmetic expression pattern
      */
-    private const EXPR_PATTERN = '/^[^\+\-\*\/\^\)]+[0-9a-zA-z\s\+\-\*\/\^\(\)]*[^\+\-\*\/\^\(\)]+$/';
+    private const EXPR_PATTERN = '/^[0-9a-zA-z\s\(]*[0-9a-zA-z\s\+\-\*\/\^\(\)]*[0-9a-zA-Z\)]+$/';
 
     /**
      * @var int Valid expression length
@@ -70,7 +70,17 @@ class Calculator
      */
     private $memory = [];
 
-    public function __construct(string $expr)
+    public function __construct(string $expr = null)
+    {
+        $this->expr = $expr;
+    }
+
+    /**
+     * Set expression field
+     *
+     * @param string $expr Arithmetic expression string
+     */
+    public function setExpr(string $expr)
     {
         $this->expr = $expr;
     }
