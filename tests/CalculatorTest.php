@@ -79,6 +79,14 @@ class CalculatorTest extends TestCase
         $calc->setExpr('222/2 + 111*2');
         $result = $calc->calculate();
         $this->assertEquals(333, $result);
+
+        $calc->setExpr('1000000000*1000000000');
+        $result = $calc->calculate();
+        $this->assertEquals('1.0E+18', $result);
+
+        $calc->setExpr('1000000000/1000000000');
+        $result = $calc->calculate();
+        $this->assertEquals(1, $result);
     }
 
     public function testValidation()
