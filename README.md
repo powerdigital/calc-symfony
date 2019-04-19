@@ -57,9 +57,9 @@ Usage
 Attention: Make sure that you correctly installed all necessary tools and dependencies described in the previous sections.
 If yes, move forward! 
 > UI: Go to this address using your favorite web browser 
-```
-http://0.0.0.0:8080
-```
+
+[http://0.0.0.0:8080](http://0.0.0.0:8080)
+
 Enjoy playing with calculator! It's so fun! Joke)
 
 > CLI: You can use calculator as console script

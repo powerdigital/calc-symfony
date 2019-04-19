@@ -12,7 +12,7 @@ class Calculator
     /**
      * @var string Valid arithmetic expression pattern
      */
-    private const EXPR_PATTERN = '/^[0-9a-zA-z\s\(]*[0-9a-zA-z\s\+\-\*\/\^\(\)]*[0-9a-zA-Z\)]+$/';
+    private const EXPR_PATTERN = '/^[0-9a-zA-z\s\(]*[0-9a-zA-z\s\+\-\*\/\^\(\)\.]*[0-9a-zA-Z\)]+$/';
 
     /**
      * @var int Valid expression length
@@ -275,7 +275,7 @@ class Calculator
 
     public static function isDigit(string $str): bool
     {
-        return is_numeric($str);
+        return is_numeric($str) || strpos($str, '.') !== false;
     }
 
     public static function isChar(string $str): bool
