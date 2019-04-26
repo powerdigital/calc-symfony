@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Exception;
 use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use SplStack;
 use Throwable;
 
@@ -61,6 +62,11 @@ class Calculator
     public const ERROR = 'ERROR';
 
     /**
+     * @var LoggerInterface Logger interface
+     */
+    private $logger;
+
+    /**
      * @var string Arithmetic expression
      */
     private $expr;
@@ -70,8 +76,9 @@ class Calculator
      */
     private $memory = [];
 
-    public function __construct(string $expr = null)
+    public function __construct(LoggerInterface $logger, string $expr = null)
     {
+        $this->logger = $logger;
         $this->expr = $expr;
     }
 
@@ -99,6 +106,8 @@ class Calculator
             $expr = trim(str_replace(' ', '', $expr));
 
             if (!self::isValid($expr)) {
+                $this->logger->error(sprintf('Invalid expression provided: %s', $expr));
+
                 return self::ERROR;
             }
 
@@ -125,7 +134,7 @@ class Calculator
                     // because it served checking purposes and may break the algorithm logic
                     $i--;
 
-                    $numStack->push((float) $result);
+                    $numStack->push((float)$result);
                 } elseif (self::isOperator($currElement)) {
                     if (!isset($prevOperator)) {
                         $operStack->push($currElement);
@@ -146,7 +155,7 @@ class Calculator
 
                     $resultNum = self::evaluate($prevNum, $currNum, $prevOperator);
 
-                    $numStack->push((float) $resultNum);
+                    $numStack->push((float)$resultNum);
                     $operStack->pop();
 
                     // We have to reset index after last operation
@@ -166,10 +175,12 @@ class Calculator
                     $converted = self::MATH_CONSTANTS[$result] ?? $this->memory[$result] ?? null;
 
                     if (empty($converted)) {
+                        $this->logger->error(sprintf('Expression contains unsupported variables: %s', $result));
+
                         return self::ERROR;
                     }
 
-                    $numStack->push((float) $converted);
+                    $numStack->push((float)$converted);
                 } elseif (self::isOpening($currElement)) {
                     // Add opening parenthesis in stack without additional conditions
                     $operStack->push($currElement);
@@ -192,6 +203,8 @@ class Calculator
                     $numStack->push($resultNum);
                     $operStack->pop();
                 } else {
+                    $this->logger->error(sprintf('Expression contains unsupported symbols: %s', $expr));
+
                     return self::ERROR;
                 }
             }
@@ -205,8 +218,16 @@ class Calculator
                 $numStack->push($resultNum);
             }
 
-            return (string) round($numStack->pop(), 5);
+            $response = (string)round($numStack->pop(), 5);
+
+            $this->logger->info(
+                sprintf('Provided expression "%s" successfully calculated with result: %s', $expr, $response)
+            );
+
+            return $response;
         } catch (Throwable $e) {
+            $this->logger->error(sprintf('Unexpected error occurred: %s', $e->getMessage()));
+
             return self::ERROR;
         }
     }

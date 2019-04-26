@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Service\Calculator;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
 class CalculatorTest extends TestCase
@@ -19,7 +20,7 @@ class CalculatorTest extends TestCase
      */
     public function testCalculator()
     {
-        $calc = new Calculator(self::VALID_EXPRESSION_STRING);
+        $calc = new Calculator(new Logger('calc'), self::VALID_EXPRESSION_STRING);
         $result = $calc->calculate();
         $expected = round((float) self::VALID_EXPRESSION_DIGITS, 5);
 
@@ -31,7 +32,7 @@ class CalculatorTest extends TestCase
      */
     public function testMathConstants()
     {
-        $calc = new Calculator(self::VALID_EXPRESSION_CONST);
+        $calc = new Calculator(new Logger('calc'), self::VALID_EXPRESSION_CONST);
         $result = $calc->calculate();
 
         $this->assertNotNull($result);
@@ -42,7 +43,7 @@ class CalculatorTest extends TestCase
      */
     public function testUseCases()
     {
-        $calc = new Calculator();
+        $calc = new Calculator(new Logger('calc'));
 
         $calc->setExpr('5*(5+2)');
         $result = $calc->calculate();

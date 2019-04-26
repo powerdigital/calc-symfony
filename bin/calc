@@ -3,6 +3,7 @@
 
 use App\Service\Console;
 use App\Service\Calculator;
+use Monolog\Logger;
 
 if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL;
@@ -28,7 +29,7 @@ if (isset($opt['help'])) {
 }
 
 try {
-    $calculator = new Calculator($opt['expr']);
+    $calculator = new Calculator(new Logger('calc'), $opt['expr']);
     $result = $calculator->calculate();
 
     $console->out('');

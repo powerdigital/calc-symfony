@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Calculator;
+use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,7 +30,8 @@ class IndexController extends AbstractController
         $expr = json_decode($request->getContent());
 
         try {
-            $calc = new Calculator($expr->data);
+            $logger = new Logger('calc');
+            $calc = new Calculator($logger, $expr->data);
             $result = $calc->calculate();
         } catch (Throwable $e) {
             $result = Calculator::ERROR;
